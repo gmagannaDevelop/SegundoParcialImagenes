@@ -28,7 +28,7 @@ from matplotlib import cm
 
 # ## Definición de funciones :
 
-# In[96]:
+# In[112]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -180,21 +180,38 @@ def ImPotencia(image: np.ndarray) -> float:
 def fourier_meshgrid(image: np.ndarray):
     """
     """
-    
-    # Creamos el rango para las variables frecuenciales.
+    M, N = image.shape
     u, v = list(map(lambda x: np.arange(0, x), image.shape))
     idx, idy = list(map(lambda x, y: np.nonzero(x > y/2), [u, v], image.shape))
+    u[idx] -= M
+    v[idy] -= N
+    V, U = np.meshgrid(v, u)
+    
+    return U, V
 ##
-    
-def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
+
+def D(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False) -> np.ndarray:
     """
+    """
+    _d = U**2 + V**2
+    if not squared:
+        _d = np.sqrt(_d)
+    if centered:
+        _d = np.fft.fftshift(_d)
     
+    return _d
+    
+def FiltraGaussiana(image: np.ndarray, sigma: float, size: int = 3, kind: str = 'low') -> np.ndarray:
+    """
     
     """
     kind   = kind.lower()
     _kinds = ['low', 'high', 'lowpass', 'highpass']
     if kind not in _kinds:
         raise Exception(f'Error : Tipo desconocido de filtro \"{kind}\".\n Tipos disponibles : {_kinds}')
+    
+    if True:
+        cv2.getGaussianKernel(-5, 0.5)
     
     #_X = np.exp(-1.0 *)
 ##
@@ -427,14 +444,57 @@ list(map(cv2.getOptimalDFTSize, y.shape))
 y.shape
 
 
-# In[95]:
+# In[98]:
+
+
+help(cv2.getGaussianKernel)
+
+
+# In[102]:
 
 
 
+
+
+# In[118]:
+
+
+u = np.array([[0, 2, 5], [6, 7, 8], [9, 1, 3]])
+u_shift = np
+
+
+# In[108]:
+
+
+u_shift
+
+
+# In[109]:
+
+
+np.f
+
+
+# In[114]:
+
+
+U, V = fourier_meshgrid(x)
+
+
+# In[116]:
+
+
+U
+
+
+# In[117]:
+
+
+type(U)
 
 
 # In[ ]:
 
 
-
+np
 
