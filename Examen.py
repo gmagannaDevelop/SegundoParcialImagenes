@@ -9,7 +9,7 @@
 
 # ## Módulos necesarios :
 
-# In[1]:
+# In[75]:
 
 
 from typing import Tuple
@@ -28,7 +28,7 @@ from matplotlib import cm
 
 # ## Definición de funciones :
 
-# In[73]:
+# In[77]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
