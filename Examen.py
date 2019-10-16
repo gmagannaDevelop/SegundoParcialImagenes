@@ -28,7 +28,7 @@ from matplotlib import cm
 
 # ## Definición de funciones :
 
-# In[77]:
+# In[96]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -57,6 +57,11 @@ def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
 
 def paddedsize(*args, **kwargs) -> Tuple[int]:
     """
+        ### DEPRECATED ! ###
+        
+        OpenCV has a better implementation :
+        https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_transforms/py_fourier_transform/py_fourier_transform.html#fourier-transform
+    
         Traducción a Python3.7 de la función definida en:
         Gonzalez Image Processing with MATLAB
         Capítulo 4, Sección 3 :  'Filtering in the frequency domain', página 117
@@ -143,6 +148,29 @@ def paddedsize(*args, **kwargs) -> Tuple[int]:
     return tuple(PQ)
 ##
 
+def pre_fft_processing(image: np.ndarray) -> np.ndarray:
+    """
+    """
+    
+    row, cols = image.shape
+    nrows, ncols = list(map(cv2.getOptimalDFTSize, image.shape))
+    right = ncols - cols
+    bottom = nrows - rows
+    bordertype = cv2.BORDER_CONSTANT #just to avoid line breakup in PDF file
+    nimg = cv2.copyMakeBorder(image,0,bottom,0,right,bordertype, value = 0)
+    
+    return nimg
+##
+
+def fft2(image: np.ndarray):
+    """
+    """
+    nimg = pre_fft_processing(image)
+    dft2 = cv2.dft(np.float32(nimg),flags=cv2.DFT_COMPLEX_OUTPUT)
+    
+    return dft2
+##
+
 def ImPotencia(image: np.ndarray) -> float:
     """
     """
@@ -198,16 +226,16 @@ plt.imshow(X, cmap='gray')
 ImPotencia(X)
 
 
-# In[16]:
+# In[ ]:
 
 
-exception('eRROR')
 
 
-# In[19]:
+
+# In[83]:
 
 
-FiltraGaussiana(np.ndarray([]), kind='lowPalss')
+FiltraGaussiana(np.ndarray([]), sigma=4, kind='lowPass')
 
 
 # In[23]:
@@ -347,6 +375,62 @@ y.max()
 
 
 np.ceil(np.log2(np.abs(4.1)))
+
+
+# In[84]:
+
+
+paddedsize(x.shape)
+
+
+# In[86]:
+
+
+help(cv2.dft)
+
+
+# In[87]:
+
+
+rows,cols = x.shape
+rows,cols
+
+
+# In[88]:
+
+
+nrows = cv2.getOptimalDFTSize(rows)
+ncols = cv2.getOptimalDFTSize(cols)
+
+
+# In[89]:
+
+
+nrows, ncols
+
+
+# In[91]:
+
+
+y = img.imread('imagenes/Mamografia.tif')
+
+
+# In[93]:
+
+
+list(map(cv2.getOptimalDFTSize, y.shape))
+
+
+# In[94]:
+
+
+y.shape
+
+
+# In[95]:
+
+
+
 
 
 # In[ ]:
