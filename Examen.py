@@ -9,7 +9,7 @@
 
 # ## Módulos necesarios :
 
-# In[75]:
+# In[1]:
 
 
 from typing import Tuple
@@ -28,7 +28,7 @@ from matplotlib import cm
 
 # ## Definición de funciones :
 
-# In[112]:
+# In[16]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -190,7 +190,7 @@ def fourier_meshgrid(image: np.ndarray):
     return U, V
 ##
 
-def D(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False) -> np.ndarray:
+def fourier_distance(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False) -> np.ndarray:
     """
     """
     _d = U**2 + V**2
@@ -209,15 +209,18 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, size: int = 3, kind: str = 
     _kinds = ['low', 'high', 'lowpass', 'highpass']
     if kind not in _kinds:
         raise Exception(f'Error : Tipo desconocido de filtro \"{kind}\".\n Tipos disponibles : {_kinds}')
-    
-    if True:
-        cv2.getGaussianKernel(-5, 0.5)
+    U, V = fourier_meshgrid(image)
+    D = fourier_distance(U, V)
+    H = np.exp( -1 * D / (2 * sigma**2) )
+    if kind == 'low' or kind == 'lowpass':
+        return H
+        
     
     #_X = np.exp(-1.0 *)
 ##
 
 
-# In[14]:
+# In[3]:
 
 
 x = img.imread('docs/Fig.tif')
@@ -225,19 +228,19 @@ x = img.imread('docs/Fig.tif')
 plt.imshow(x, cmap='gray')
 
 
-# In[9]:
+# In[4]:
 
 
 X  = img_fft(x)
 
 
-# In[10]:
+# In[5]:
 
 
 plt.imshow(X, cmap='gray')
 
 
-# In[11]:
+# In[6]:
 
 
 ImPotencia(X)
@@ -249,50 +252,50 @@ ImPotencia(X)
 
 
 
-# In[83]:
+# In[7]:
 
 
 FiltraGaussiana(np.ndarray([]), sigma=4, kind='lowPass')
 
 
-# In[23]:
+# In[8]:
 
 
 -1 * x[1][1]
 
 
-# In[25]:
+# In[9]:
 
 
 help(np.fft.fftshift)
 
 
-# In[26]:
+# In[10]:
 
 
 freqs = np.fft.fftfreq(9, d=1./9).reshape(3, 3)
 freqs
 
 
-# In[27]:
+# In[11]:
 
 
 np.fft.fftshift(freqs)
 
 
-# In[28]:
+# In[12]:
 
 
 freqs.in freqs[ freqs > 3 ]
 
 
-# In[45]:
+# In[13]:
 
 
 #dir(freqs)
 
 
-# In[31]:
+# In[14]:
 
 
 list(map(lambda x, y: x > y, [1, 2], [1, 1, 1]))
@@ -493,8 +496,14 @@ U
 type(U)
 
 
+# In[18]:
+
+
+FiltraGaussiana(x, sigma=3)
+
+
 # In[ ]:
 
 
-np
+
 
