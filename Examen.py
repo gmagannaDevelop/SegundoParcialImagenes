@@ -312,5 +312,5 @@ plt.imshow(IA, cmap='gray')
 # In[ ]:
 
 
-
+# Hola Pats
 
