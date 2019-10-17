@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = (15, 8)
 
 # ## Definición de funciones :
 
-# In[54]:
+# In[167]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -203,7 +203,7 @@ def fourier_meshgrid(image: np.ndarray):
     return U, V
 ##
 
-def fourier_distance(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False) -> np.ndarray:
+def fourier_distance(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = True) -> np.ndarray:
     """
     """
     _d = U**2 + V**2
@@ -220,10 +220,12 @@ def kernel_gaussiano(image: np.ndarray, sigma: float, kind: str = 'low') -> np.n
     """
     U, V = fourier_meshgrid(image)
     D = fourier_distance(U, V)
-    H = np.exp( -1 * D / (2 * sigma**2) )
+    H = np.exp( (-1.0 * D) / (2.0 * sigma**2) )
     
     if kind == 'high' or kind == 'highpass':
-        D = 1.0 - H
+        H = 1.0 - H
+        
+    return H
 ##
     
 def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
@@ -234,16 +236,14 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
     _kinds = ['low', 'high', 'lowpass', 'highpass']
     if kind not in _kinds:
         raise Exception(f'Error : Tipo desconocido de filtro \"{kind}\".\n Tipos disponibles : {_kinds}')
-    U, V = fourier_meshgrid(image)
-    D = fourier_distance(U, V)
-    H = np.exp( -1 * D / (2 * sigma**2) )
     
-    if kind == 'high' or kind == 'highpass':
-        D = 1.0 - H
-    
+    H  = kernel_gaussiano(image=image, sigma=sigma, kind=kind)
     _F = np.fft.fft2(image)
     G  = H * _F
     g  = np.real(np.fft.ifft2(G))
+    
+    # Recortamos la imagen a su tamaño original, de ser requerido.
+    g = g[:image.shape[0], :image.shape[1]]  
     
     return g
         
@@ -252,51 +252,97 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
 ##
 
 
-# In[56]:
+# In[168]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
 plt.imshow(I, cmap='gray')
 
 
-# In[58]:
+# In[169]:
 
 
-#fft_viz(I)
+fft_viz(I)
 
 
-# In[59]:
+# In[170]:
 
 
 ImPotencia(I)
 
 
-# In[60]:
+# In[203]:
 
 
-IB = FiltraGaussiana(I, sigma=16)
+IB = FiltraGaussiana(I, sigma=16, kind='low')
 
 
-# In[61]:
+# In[204]:
 
 
 ImPotencia(IB)
 
 
-# In[62]:
+# In[205]:
 
 
 plt.imshow(IB, cmap='gray')
 
 
-# In[63]:
+# In[206]:
 
 
 fft_viz(IB)
 
 
+# In[202]:
+
+
+x = kernel_gaussiano(image=I, sigma=16)
+
+
+# In[191]:
+
+
+166**2
+
+
+# In[192]:
+
+
+sum(
+    map(
+        lambda x: 1 if x else 0, np.isclose(x, 0).flatten()
+       ) 
+   )
+
+
+# In[193]:
+
+
+np.isclose(x, 0).flatten()
+
+
+# In[194]:
+
+
+plt.imshow(x, cmap='gray')
+
+
+# In[153]:
+
+
+type(0.0)
+
+
+# In[154]:
+
+
+type(x[0][0])
+
+
 # In[ ]:
 
 
-
+I.
 
