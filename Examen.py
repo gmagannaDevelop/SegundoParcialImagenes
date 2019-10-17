@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = (15, 8)
 
 # ## Definición de funciones :
 
-# In[266]:
+# In[284]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -242,20 +242,13 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
             np.fft.fft2(image)
     )
     G  = H * _F
-    g  = np.real(
-            np.fft.ifft2(
-                np.fft.ifftshift(G)
-            )
-    )
+    g  = np.real( np.fft.ifft2( np.fft.ifftshift(G) ))
     
     # Recortamos la imagen a su tamaño original, de ser requerido.
     g = g[:image.shape[0], :image.shape[1]]  
-    
         
     return g
         
-    
-    #_X = np.exp(-1.0 *)
 ##
 
 
@@ -272,86 +265,48 @@ plt.imshow(I, cmap='gray')
 fft_viz(I)
 
 
-# In[269]:
+# In[287]:
 
 
-ImPotencia(I)
+pot_I = ImPotencia(I)
 
 
-# In[270]:
+# In[280]:
 
 
-IB = FiltraGaussiana(I, sigma=0.05*I.shape[0], kind='low')
+IB = FiltraGaussiana(I, sigma=16, kind='low')
 
 
-# In[271]:
+# In[289]:
 
 
-ImPotencia(IB)
+pot_IB = ImPotencia(IB)
 
 
-# In[272]:
+# In[282]:
 
 
 plt.imshow(IB, cmap='gray')
 
 
-# In[273]:
+# In[283]:
 
 
 fft_viz(IB)
 
 
-# In[233]:
+# In[291]:
 
 
-x = kernel_gaussiano(image=I, sigma=16)
+IA = FiltraGaussiana(I, sigma=16, kind='high')
+pot_IA = ImPotencia(IA)
+pot_IA
 
 
-# In[191]:
+# In[286]:
 
 
-166**2
-
-
-# In[192]:
-
-
-sum(
-    map(
-        lambda x: 1 if x else 0, np.isclose(x, 0).flatten()
-       ) 
-   )
-
-
-# In[193]:
-
-
-np.isclose(x, 0).flatten()
-
-
-# In[194]:
-
-
-plt.imshow(x, cmap='gray')
-
-
-# In[153]:
-
-
-type(0.0)
-
-
-# In[154]:
-
-
-type(x[0][0])
-
-
-# In[250]:
-
-
-help(np.fft.fft2)
+plt.imshow(IA, cmap='gray')
 
 
 # In[ ]:
