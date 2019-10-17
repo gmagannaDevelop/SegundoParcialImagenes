@@ -9,7 +9,7 @@
 
 # ## Módulos necesarios :
 
-# In[75]:
+# In[1]:
 
 
 from typing import Tuple
@@ -26,9 +26,15 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 
+# In[48]:
+
+
+plt.rcParams['figure.figsize'] = (15, 8)
+
+
 # ## Definición de funciones :
 
-# In[112]:
+# In[167]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -54,6 +60,13 @@ def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
     
     return _X_img
 ##
+
+def fft_viz(image: np.ndarray, shift: bool = True) -> None:
+    """
+        Ver la transformada de fourier de una imagen.
+    """
+    plt.imshow(img_fft(image, shift=shift), cmap='gray')
+    
 
 def paddedsize(*args, **kwargs) -> Tuple[int]:
     """
@@ -190,7 +203,7 @@ def fourier_meshgrid(image: np.ndarray):
     return U, V
 ##
 
-def D(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False) -> np.ndarray:
+def fourier_distance(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = True) -> np.ndarray:
     """
     """
     _d = U**2 + V**2
@@ -201,7 +214,21 @@ def D(U: np.ndarray, V: np.ndarray, centered: bool = True, squared: bool = False
     
     return _d
     
-def FiltraGaussiana(image: np.ndarray, sigma: float, size: int = 3, kind: str = 'low') -> np.ndarray:
+def kernel_gaussiano(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
+    """
+        Calcula un kernel gaussiano para una imagen dada.
+    """
+    U, V = fourier_meshgrid(image)
+    D = fourier_distance(U, V)
+    H = np.exp( (-1.0 * D) / (2.0 * sigma**2) )
+    
+    if kind == 'high' or kind == 'highpass':
+        H = 1.0 - H
+        
+    return H
+##
+    
+def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
     """
     
     """
@@ -210,291 +237,112 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, size: int = 3, kind: str = 
     if kind not in _kinds:
         raise Exception(f'Error : Tipo desconocido de filtro \"{kind}\".\n Tipos disponibles : {_kinds}')
     
-    if True:
-        cv2.getGaussianKernel(-5, 0.5)
+    H  = kernel_gaussiano(image=image, sigma=sigma, kind=kind)
+    _F = np.fft.fft2(image)
+    G  = H * _F
+    g  = np.real(np.fft.ifft2(G))
+    
+    # Recortamos la imagen a su tamaño original, de ser requerido.
+    g = g[:image.shape[0], :image.shape[1]]  
+    
+    return g
+        
     
     #_X = np.exp(-1.0 *)
 ##
 
 
-# In[14]:
+# In[168]:
 
 
-x = img.imread('docs/Fig.tif')
-#print(f'{type(x[0][0])}')
+I = img.imread('docs/FigP0401(test_pattern).tif')
+plt.imshow(I, cmap='gray')
+
+
+# In[169]:
+
+
+fft_viz(I)
+
+
+# In[170]:
+
+
+ImPotencia(I)
+
+
+# In[203]:
+
+
+IB = FiltraGaussiana(I, sigma=16, kind='low')
+
+
+# In[204]:
+
+
+ImPotencia(IB)
+
+
+# In[205]:
+
+
+plt.imshow(IB, cmap='gray')
+
+
+# In[206]:
+
+
+fft_viz(IB)
+
+
+# In[202]:
+
+
+x = kernel_gaussiano(image=I, sigma=16)
+
+
+# In[191]:
+
+
+166**2
+
+
+# In[192]:
+
+
+sum(
+    map(
+        lambda x: 1 if x else 0, np.isclose(x, 0).flatten()
+       ) 
+   )
+
+
+# In[193]:
+
+
+np.isclose(x, 0).flatten()
+
+
+# In[194]:
+
+
 plt.imshow(x, cmap='gray')
 
 
-# In[9]:
+# In[153]:
 
 
-X  = img_fft(x)
+type(0.0)
 
 
-# In[10]:
+# In[154]:
 
 
-plt.imshow(X, cmap='gray')
-
-
-# In[11]:
-
-
-ImPotencia(X)
+type(x[0][0])
 
 
 # In[ ]:
 
 
-
-
-
-# In[83]:
-
-
-FiltraGaussiana(np.ndarray([]), sigma=4, kind='lowPass')
-
-
-# In[23]:
-
-
--1 * x[1][1]
-
-
-# In[25]:
-
-
-help(np.fft.fftshift)
-
-
-# In[26]:
-
-
-freqs = np.fft.fftfreq(9, d=1./9).reshape(3, 3)
-freqs
-
-
-# In[27]:
-
-
-np.fft.fftshift(freqs)
-
-
-# In[28]:
-
-
-freqs.in freqs[ freqs > 3 ]
-
-
-# In[45]:
-
-
-#dir(freqs)
-
-
-# In[31]:
-
-
-list(map(lambda x, y: x > y, [1, 2], [1, 1, 1]))
-
-
-# In[32]:
-
-
-x.shape
-
-
-# In[35]:
-
-
-np.array(
-    np.array([1.4, 2])
-)
-
-
-# In[36]:
-
-
-_ = np.array([1, 2, 4, 5])
-
-
-# In[40]:
-
-
-_.shape = tuple(np.array([2, 2]))
-
-
-# In[41]:
-
-
-A = B = C = 3
-
-
-# In[44]:
-
-
-[*[1, 2], *[3, 4]]
-
-
-# In[47]:
-
-
-print(img_fft.__doc__)
-
-
-# In[54]:
-
-
-def lol(*args):
-    """
-    doc
-    """
-    print(f'args are : {args}')
-
-
-# In[57]:
-
-
-lol()
-
-
-# In[59]:
-
-
-y = np.array([1, 2, 3])
-
-
-# In[61]:
-
-
-[1, *y]
-
-
-# In[62]:
-
-
-type(x.shape)
-
-
-# In[63]:
-
-
-type('asd') is str
-
-
-# In[67]:
-
-
-y.max()
-
-
-# In[70]:
-
-
-np.ceil(np.log2(np.abs(4.1)))
-
-
-# In[84]:
-
-
-paddedsize(x.shape)
-
-
-# In[86]:
-
-
-help(cv2.dft)
-
-
-# In[87]:
-
-
-rows,cols = x.shape
-rows,cols
-
-
-# In[88]:
-
-
-nrows = cv2.getOptimalDFTSize(rows)
-ncols = cv2.getOptimalDFTSize(cols)
-
-
-# In[89]:
-
-
-nrows, ncols
-
-
-# In[91]:
-
-
-y = img.imread('imagenes/Mamografia.tif')
-
-
-# In[93]:
-
-
-list(map(cv2.getOptimalDFTSize, y.shape))
-
-
-# In[94]:
-
-
-y.shape
-
-
-# In[98]:
-
-
-help(cv2.getGaussianKernel)
-
-
-# In[102]:
-
-
-
-
-
-# In[118]:
-
-
-u = np.array([[0, 2, 5], [6, 7, 8], [9, 1, 3]])
-u_shift = np
-
-
-# In[108]:
-
-
-u_shift
-
-
-# In[109]:
-
-
-np.f
-
-
-# In[114]:
-
-
-U, V = fourier_meshgrid(x)
-
-
-# In[116]:
-
-
-U
-
-
-# In[117]:
-
-
-type(U)
-
-
-# In[ ]:
-
-
-np
+I.
 
