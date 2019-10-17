@@ -28,7 +28,7 @@ from matplotlib import cm
 
 # ## Definición de funciones :
 
-# In[16]:
+# In[36]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -212,8 +212,15 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, size: int = 3, kind: str = 
     U, V = fourier_meshgrid(image)
     D = fourier_distance(U, V)
     H = np.exp( -1 * D / (2 * sigma**2) )
-    if kind == 'low' or kind == 'lowpass':
-        return H
+    
+    if kind == 'high' or kind == 'highpass':
+        D = 1.0 - H
+    
+    _F = np.fft.fft2(image)
+    G  = H * _F
+    g  = np.real(np.fft.ifft2(G))
+    
+    return g
         
     
     #_X = np.exp(-1.0 *)
@@ -496,10 +503,52 @@ U
 type(U)
 
 
-# In[18]:
+# In[20]:
 
 
-FiltraGaussiana(x, sigma=3)
+fgauss = FiltraGaussiana(x, sigma=3)
+
+
+# In[21]:
+
+
+list(map(lambda x: x.shape, [fgauss, x]))
+
+
+# In[38]:
+
+
+plt.imshow(FiltraGaussiana(x, sigma=16), cmap='gray')
+
+
+# In[22]:
+
+
+help(np.prod)
+
+
+# In[30]:
+
+
+(x * x[:,:499]).shape
+
+
+# In[29]:
+
+
+x.dot(x[:, :30]).shape
+
+
+# In[ ]:
+
+
+np.fft.ifft2
+
+
+# In[33]:
+
+
+help(np.real)
 
 
 # In[ ]:
