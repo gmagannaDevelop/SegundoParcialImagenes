@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = (15, 8)
 
 # ## Definición de funciones :
 
-# In[242]:
+# In[266]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -251,8 +251,7 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
     # Recortamos la imagen a su tamaño original, de ser requerido.
     g = g[:image.shape[0], :image.shape[1]]  
     
-    g = np.fft.ifftshift(g)
-    
+        
     return g
         
     
@@ -260,44 +259,44 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
 ##
 
 
-# In[243]:
+# In[267]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
 plt.imshow(I, cmap='gray')
 
 
-# In[244]:
+# In[268]:
 
 
 fft_viz(I)
 
 
-# In[245]:
+# In[269]:
 
 
 ImPotencia(I)
 
 
-# In[246]:
+# In[270]:
 
 
 IB = FiltraGaussiana(I, sigma=0.05*I.shape[0], kind='low')
 
 
-# In[247]:
+# In[271]:
 
 
 ImPotencia(IB)
 
 
-# In[248]:
+# In[272]:
 
 
 plt.imshow(IB, cmap='gray')
 
 
-# In[249]:
+# In[273]:
 
 
 fft_viz(IB)
