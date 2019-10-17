@@ -9,7 +9,7 @@
 
 # ## Módulos necesarios :
 
-# In[1]:
+# In[13]:
 
 
 from typing import Tuple
@@ -30,15 +30,15 @@ import skimage.morphology
 import skimage.filters
 
 
-# In[33]:
+# In[14]:
 
 
-plt.rcParams['figure.figsize'] = (5, 5)
+plt.rcParams['figure.figsize'] = (15, 8)
 
 
 # ## Definición de funciones :
 
-# In[14]:
+# In[15]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -190,10 +190,8 @@ def fft2(image: np.ndarray):
 
 def ImPotencia(image: np.ndarray) -> float:
     """
-    Calcula la potencia de acuerdo al teorema de Parseval.
     """
-    _F = np.fft.fft2(image)
-    return np.sum(np.abs(_F)**2) / np.prod(_F.shape)
+    return np.sum(np.abs(image)**2) / np.prod(image.shape)
 ##
 
 def fourier_meshgrid(image: np.ndarray):
@@ -263,118 +261,11 @@ def filtro_disco(image: np.ndarray, radius: int = 5) -> np.ndarray:
     _circle = skimage.morphology.disk(radius)
     _filtered = skimage.filters.rank.mean(image, selem=_circle)
     return _filtered
-    
 
-
-# __1. Haga una función llamada ImPotencia que, dada una imagen, calcule su potencia promedio. Para realizar el cálculo utilice el teorema de Parseval que dice lo siguiente:__
-# $$
-# P_f = \frac{1}{MN}\sum_u\sum_v|F(u,v)|^2
-# $$
-
-# Véase la función Impotencia en las definiciones de funciones.
-
-# __2. Haga una función FiltraGaussiana que, dada una imagen, el tipo de filtro (pasabajos o pasaaltos) y el valor de $\sigma$, realice un filtrado con una función Gaussiana con la desviación indicada.__
-
-# Idem
-
-# __3. Utilizando las dos funciones anteriores y la imagen I FigP0401(test_pattern).tif:__
-
-# In[29]:
-
-
-I = img.imread('docs/FigP0401(test_pattern).tif')
-
-
-# __a)__ Calcule y reporte el valor de la potencia promedio $P_I$ de la imagen.
-
-# In[30]:
-
-
-pot_I = ImPotencia(I)
-pot_I
-
-
-# __b)__ Para sigma = 16, aplique un filtro pasabajos a la imagen I. Guarde la imagen en IB. Calcule la potencia a IB.
-
-# In[32]:
-
-
-IB = FiltraGaussiana(I, sigma=16, kind='low')
-pot_IB = ImPotencia(IB)
-pot_IB
-
-
-# In[34]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
 plt.imshow(I, cmap='gray')
 
-
-# In[35]:
-
-
-fft_viz(I)
-
-
-# In[36]:
-
-
-pot_I = ImPotencia(I)
-pot_I
-
-
-# In[37]:
-
-
-IB = FiltraGaussiana(I, sigma=16, kind='low')
-
-
-# In[38]:
-
-
-pot_IB = ImPotencia(IB)
-pot_IB
-
-
-# In[39]:
-
-
-plt.imshow(IB, cmap='gray')
-
-
-# In[40]:
-
-
-fft_viz(IB)
-
-
-# In[41]:
-
-
-IA = FiltraGaussiana(I, sigma=16, kind='high')
-pot_IA = ImPotencia(IA)
-pot_IA
-
-
-# In[42]:
-
-
-plt.imshow(IA, cmap='gray')
-
-
-# La función filtro_disco() sí funciona, lo que se ve aquí es un problema relacionado a la incapacidad del kernel de jupyter de manejar bien la memoria. Si ejecuta python ejemplo.py verá que el filtro sí funciona.
-
-# In[44]:
-
-
 plt.imshow(filtro_disco(I), cmap='gray' )
-
-
-# La diferencia en la potencia de las imágenes se debe a la cantidad de ceros que sus respectivas transformadas de fourier contienen.
-
-# In[ ]:
-
-
-
 
