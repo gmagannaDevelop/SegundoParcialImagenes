@@ -214,7 +214,17 @@ def fourier_distance(U: np.ndarray, V: np.ndarray, centered: bool = True, square
     
     return _d
     
-
+def kernel_gaussiano(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
+    """
+        Calcula un kernel gaussiano para una imagen dada.
+    """
+    U, V = fourier_meshgrid(image)
+    D = fourier_distance(U, V)
+    H = np.exp( -1 * D / (2 * sigma**2) )
+    
+    if kind == 'high' or kind == 'highpass':
+        D = 1.0 - H
+##
     
 def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.ndarray:
     """
