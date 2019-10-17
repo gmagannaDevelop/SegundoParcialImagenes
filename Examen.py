@@ -9,7 +9,7 @@
 
 # ## Módulos necesarios :
 
-# In[1]:
+# In[207]:
 
 
 from typing import Tuple
@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 
-# In[48]:
+# In[208]:
 
 
 plt.rcParams['figure.figsize'] = (15, 8)
@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = (15, 8)
 
 # ## Definición de funciones :
 
-# In[167]:
+# In[242]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -238,12 +238,20 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
         raise Exception(f'Error : Tipo desconocido de filtro \"{kind}\".\n Tipos disponibles : {_kinds}')
     
     H  = kernel_gaussiano(image=image, sigma=sigma, kind=kind)
-    _F = np.fft.fft2(image)
+    _F = np.fft.ifftshift(
+            np.fft.fft2(image)
+    )
     G  = H * _F
-    g  = np.real(np.fft.ifft2(G))
+    g  = np.real(
+            np.fft.ifft2(
+                np.fft.ifftshift(G)
+            )
+    )
     
     # Recortamos la imagen a su tamaño original, de ser requerido.
     g = g[:image.shape[0], :image.shape[1]]  
+    
+    g = np.fft.ifftshift(g)
     
     return g
         
@@ -252,50 +260,50 @@ def FiltraGaussiana(image: np.ndarray, sigma: float, kind: str = 'low') -> np.nd
 ##
 
 
-# In[168]:
+# In[243]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
 plt.imshow(I, cmap='gray')
 
 
-# In[169]:
+# In[244]:
 
 
 fft_viz(I)
 
 
-# In[170]:
+# In[245]:
 
 
 ImPotencia(I)
 
 
-# In[203]:
+# In[246]:
 
 
-IB = FiltraGaussiana(I, sigma=16, kind='low')
+IB = FiltraGaussiana(I, sigma=0.05*I.shape[0], kind='low')
 
 
-# In[204]:
+# In[247]:
 
 
 ImPotencia(IB)
 
 
-# In[205]:
+# In[248]:
 
 
 plt.imshow(IB, cmap='gray')
 
 
-# In[206]:
+# In[249]:
 
 
 fft_viz(IB)
 
 
-# In[202]:
+# In[233]:
 
 
 x = kernel_gaussiano(image=I, sigma=16)
@@ -341,8 +349,14 @@ type(0.0)
 type(x[0][0])
 
 
+# In[250]:
+
+
+help(np.fft.fft2)
+
+
 # In[ ]:
 
 
-I.
+
 
