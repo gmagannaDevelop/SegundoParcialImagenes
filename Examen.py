@@ -30,7 +30,7 @@ import skimage.morphology
 import skimage.filters
 
 
-# In[33]:
+# In[2]:
 
 
 plt.rcParams['figure.figsize'] = (5, 5)
@@ -38,7 +38,7 @@ plt.rcParams['figure.figsize'] = (5, 5)
 
 # ## Definición de funciones :
 
-# In[14]:
+# In[ ]:
 
 
 def img_fft(image: np.ndarray, shift: bool = True) -> np.ndarray:
@@ -279,7 +279,7 @@ def filtro_disco(image: np.ndarray, radius: int = 5) -> np.ndarray:
 
 # __3. Utilizando las dos funciones anteriores y la imagen I FigP0401(test_pattern).tif:__
 
-# In[29]:
+# In[4]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
@@ -287,7 +287,7 @@ I = img.imread('docs/FigP0401(test_pattern).tif')
 
 # __a)__ Calcule y reporte el valor de la potencia promedio $P_I$ de la imagen.
 
-# In[30]:
+# In[5]:
 
 
 pot_I = ImPotencia(I)
@@ -296,7 +296,7 @@ pot_I
 
 # __b)__ Para sigma = 16, aplique un filtro pasabajos a la imagen I. Guarde la imagen en IB. Calcule la potencia a IB.
 
-# In[32]:
+# In[6]:
 
 
 IB = FiltraGaussiana(I, sigma=16, kind='low')
@@ -304,52 +304,52 @@ pot_IB = ImPotencia(IB)
 pot_IB
 
 
-# In[34]:
+# In[7]:
 
 
 I = img.imread('docs/FigP0401(test_pattern).tif')
 plt.imshow(I, cmap='gray')
 
 
-# In[35]:
+# In[8]:
 
 
 fft_viz(I)
 
 
-# In[36]:
+# In[9]:
 
 
 pot_I = ImPotencia(I)
 pot_I
 
 
-# In[37]:
+# In[10]:
 
 
 IB = FiltraGaussiana(I, sigma=16, kind='low')
 
 
-# In[38]:
+# In[11]:
 
 
 pot_IB = ImPotencia(IB)
 pot_IB
 
 
-# In[39]:
+# In[12]:
 
 
 plt.imshow(IB, cmap='gray')
 
 
-# In[40]:
+# In[13]:
 
 
 fft_viz(IB)
 
 
-# In[41]:
+# In[14]:
 
 
 IA = FiltraGaussiana(I, sigma=16, kind='high')
@@ -357,10 +357,16 @@ pot_IA = ImPotencia(IA)
 pot_IA
 
 
-# In[42]:
+# In[15]:
 
 
 plt.imshow(IA, cmap='gray')
+
+
+# In[16]:
+
+
+fft_viz(IA)
 
 
 # La función filtro_disco() sí funciona, lo que se ve aquí es un problema relacionado a la incapacidad del kernel de jupyter de manejar bien la memoria. Si ejecuta python ejemplo.py verá que el filtro sí funciona.
