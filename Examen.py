@@ -371,10 +371,10 @@ fft_viz(IA)
 
 # La función filtro_disco() sí funciona, lo que se ve aquí es un problema relacionado a la incapacidad del kernel de jupyter de manejar bien la memoria. Si ejecuta python ejemplo.py verá que el filtro sí funciona.
 
-# In[44]:
+# In[1]:
 
 
-plt.imshow(filtro_disco(I), cmap='gray' )
+#plt.imshow(filtro_disco(I), cmap='gray' )
 
 
 # La diferencia en la potencia de las imágenes se debe a la cantidad de ceros que sus respectivas transformadas de fourier contienen.
