@@ -1,26 +1,20 @@
 
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image  as img
-
-import skimage
-import skimage.data
-import skimage.morphology
-import skimage.filters
+import copy
 
 from myfunctions import *
 
-def filtro_disco(image: np.ndarray, radius: int = 5) -> np.ndarray:
-    """
-    
-    """
-    _circle = skimage.morphology.disk(radius)
-    _filtered = skimage.filters.rank.mean(image, selem=_circle)
-    return _filtered
-##
-
 def main():
-  pass
+  I = img.imread('docs/FigP0401(test_pattern).tif')
+  I = copy.deepcopy(I)
+  IB = FiltraGaussiana(I, sigma=16, kind='low')
+  pot_IB = ImPotencia(IB)
+
+  search = {}
+
+  for r in range(40):
+    _tmp = filtro_disco(I, radius=r)
+    _pot_tmp = ImPotencia(_tmp)
+    print(f'radio: {r}, Δ(potencia) = {np.abs(_pot_tmp - pot_IB)}')
 ##
 
 if __name__ == "main":
