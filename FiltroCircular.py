@@ -62,15 +62,17 @@ def main():
     print(f'radio: {r}, Δ(potencia) = {delta}')
   
   plot = {v:k for k,v in search.items()}
-  grafica_diccionario(plot, 'radio del disco, abs(ΔPotencia)')
+  fig_curva = 'radio_dif_potencia.png'
+  grafica_diccionario(plot, 'radio del disco, abs(ΔPotencia)', name=fig_curva)
 
   R = search[min(search.keys())]
   imDisc = filtro_disco(I, radius=R)
   
-
-  image_save_and_show(imDisc, f'Filtro de disco, radio = {R}', 'filtro_disco_ganador.png') 
-  image_save_and_show(IB, f'Filtro gaussiano tipo={kind}, sigma={sigma}', 'filtro_pasabajos_gaussiano.png') 
-  
+  file1 = 'filtro_disco_ganador.png' 
+  file2 = 'filtro_pasabajos_gaussiano.png'
+  image_save_and_show(imDisc, f'Filtro de disco, radio = {R}', file1) 
+  image_save_and_show(IB, f'Filtro gaussiano tipo={kind}, sigma={sigma}', file2) 
+  print(f'\n Archivos creados :\n {file1}\n {file2}\n {fig_curva}')
 ##
 
 if __name__ == "__main__":
