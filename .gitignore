@@ -1,3 +1,5 @@
 *.pdf
+.*.swp
 .ipynb_checkpoints/*
 imagenes/*
+__pycache__/
