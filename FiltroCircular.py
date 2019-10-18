@@ -23,6 +23,17 @@ def grafica_diccionario(my_dict: dict,
     plt.savefig(name)
 ##
 
+def image_save_and_show(imagen: np.ndarray, titulo: str, archivo: str) -> None:
+  """
+  """
+  plt.figure()
+  plt.title(titulo)
+  plt.imshow(imagen, cmap='gray')
+  img.imsave(archivo, imagen, cmap='gray')
+  plt.show()
+##
+
+
 def main():
   # Cargar imagen :
   I = img.imread('docs/FigP0401(test_pattern).tif')
@@ -30,7 +41,9 @@ def main():
   # numpy.ndarray, el filtro circular genera un error.
   I = copy.deepcopy(I) 
   # Filtro pasabajos del inciso b.
-  IB = FiltraGaussiana(I, sigma=16, kind='low')
+  sigma = 16
+  kind = 'low'
+  IB = FiltraGaussiana(I, sigma=sigma, kind=kind)
   # Potencia de la imagen filtrada.
   pot_IB = ImPotencia(IB)
 
@@ -54,12 +67,10 @@ def main():
   R = search[min(search.keys())]
   imDisc = filtro_disco(I, radius=R)
   
-  plt.figure()
-  plt.title(f'Filtro de disco, radio = {R}')
-  plt.imshow(imDisc, cmap='gray')
-  img.imsave('filtro_disco_ganador.png', imDisc)
-  plt.show()
 
+  image_save_and_show(imDisc, f'Filtro de disco, radio = {R}', 'filtro_disco_ganador.png') 
+  image_save_and_show(IB, f'Filtro gaussiano tipo={kind}, sigma={sigma}', 'filtro_pasabajos_gaussiano.png') 
+  
 ##
 
 if __name__ == "__main__":
